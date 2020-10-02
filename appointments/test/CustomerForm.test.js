@@ -32,10 +32,10 @@ describe('CustomerForm', () => {
       expectToBeInputFieldOfTypeText(field(fieldName));
     });
 
-  const itIncludesTheExistingValue = (fieldName) =>
+  const itIncludesTheExistingValue = (fieldName, value) =>
     it('includes the existing value', () => {
-      render(<CustomerForm { ...{[fieldName]: 'value'} } />);
-      expect(field(fieldName).value).toEqual('value');      
+      render(<CustomerForm { ...{[fieldName]: value} } />);
+      expect(field(fieldName).value).toEqual(value);
     });
   
   const itRendersALabel = (fieldName, labelValue) =>
@@ -85,7 +85,7 @@ describe('CustomerForm', () => {
   
   describe('first name field', () => {
     itRendersAsATextBox('firstName');
-    itIncludesTheExistingValue('firstName');
+    itIncludesTheExistingValue('firstName', 'value');
     itRendersALabel('firstName', 'First name');
     itAssignsAnIdThatMatchesTheLabelId('firstName');
     itSubmitsExistingValue('firstName', 'value');
@@ -93,10 +93,18 @@ describe('CustomerForm', () => {
   });
   describe('last name field', () => {
     itRendersAsATextBox('lastName');
-    itIncludesTheExistingValue('lastName');
+    itIncludesTheExistingValue('lastName', 'value');
     itRendersALabel('lastName', 'Last name');
     itAssignsAnIdThatMatchesTheLabelId('lastName');
     itSubmitsExistingValue('lastName', 'value');
     itSubmitsNewValue('lastName', 'value');
+  });
+  describe('phone number field', () => {
+    itRendersAsATextBox('phoneNumber');
+    itIncludesTheExistingValue('phoneNumber', '012345');
+    itRendersALabel('phoneNumber', 'Phone number');
+    itAssignsAnIdThatMatchesTheLabelId('phoneNumber');
+    itSubmitsExistingValue('phoneNumber', '987654');
+    itSubmitsNewValue('phoneNumber', '564564');
   });
 });
