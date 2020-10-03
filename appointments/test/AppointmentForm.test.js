@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactTestUtils from 'react-dom/test-utils';
 import { createContainer } from './domManipulators';
 import { AppointmentForm } from '../src/AppointmentForm';
 
@@ -20,6 +21,13 @@ describe('AppointmentForm', () => {
   });
 
   describe('service field', () => {
+    const findOption = (dropdownNode, textContent) => {
+      const options = Array.from(dropdownNode.childNodes);
+      return options.find(
+        option => option.textContent === textContent
+      );
+    };
+
     it('renders as a select box', () => {
       render(<AppointmentForm />);
       expect(field('service')).not.toBeNull();
@@ -50,6 +58,57 @@ describe('AppointmentForm', () => {
       expect(renderedServices).toEqual(
         expect.arrayContaining(selectableServices)
       );
+    });
+    it('pre-selects the existing value', () => {
+      const services = ['Cut','Blow-dry'];
+      render(
+        <AppointmentForm
+          selectableServices={services}
+          service="Blow-dry"
+        />
+      );
+      const option = findOption(
+        field('service'),
+        'Blow-dry'
+      );
+      expect(option.selected).toBeTruthy();
+    });
+    it('renders a label', () => {
+      render(<AppointmentForm />);
+      expect(container.querySelector(`label[for="service"]`)).not.toBeNull();
+      expect(container.querySelector(`label[for="service"]`).textContent).toEqual('Services');
+    });
+    it('assigns an id that matches the label id', () => {
+      render(<AppointmentForm />);
+      expect(field('service').id).toEqual('service');
+    });
+    it('saves existing value when submitted', async () => {
+      expect.hasAssertions();
+      render(
+        <AppointmentForm
+          service="Blow-dry"
+          onSubmit={({ service }) =>
+            expect(service).toEqual('Blow-dry')
+          }
+        />
+      );
+      await ReactTestUtils.Simulate.submit(form('appointment'));
+    });
+    it('saves new value when submitted', async () => {
+      expect.hasAssertions();
+      render(
+        <AppointmentForm
+          service='Blow-dry'
+          onSubmit={({ service }) =>
+            expect(service).toEqual('Cut')
+          }
+        />
+      );
+      await ReactTestUtils.Simulate.change(field('service'), {
+        target: { value: 'Cut', name: 'service'}
+      });
+      await ReactTestUtils.Simulate.submit(form('appointment'));
+
     });
   });
 });
