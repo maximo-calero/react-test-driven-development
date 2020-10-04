@@ -15,6 +15,9 @@ describe('AppointmentForm', () => {
   const field = name =>
     form('appointment').elements[name];
 
+  const timeSlotTable = () =>
+    container.querySelector('table#time-slots');
+
   it('renders a form', () => {
     render(<AppointmentForm />);
     expect(form('appointment')).not.toBeNull();
@@ -46,15 +49,12 @@ describe('AppointmentForm', () => {
           selectableServices={selectableServices}
         />
       );
-
       const optionNodes = Array.from(
         field('service').childNodes
       );
-
       const renderedServices = optionNodes.map(
         node => node.textContent
       );
-
       expect(renderedServices).toEqual(
         expect.arrayContaining(selectableServices)
       );
@@ -110,5 +110,42 @@ describe('AppointmentForm', () => {
       await ReactTestUtils.Simulate.submit(form('appointment'));
 
     });
+  });
+  describe('time slot table', () => {
+    it('renders a table for time slots', () => {
+      render(<AppointmentForm />);
+      expect(timeSlotTable).not.toBeNull();
+    });
+    it('renders a time slot for every half an hour between open and close times', () => {
+      render(
+        <AppointmentForm salonOpensAt={9} salonClosesAt={11} />
+      );
+      const timesOfDay = timeSlotTable().querySelectorAll(
+        'tbody >* th'
+      );
+      expect(timesOfDay).toHaveLength(4);
+      expect(timesOfDay[0].textContent).toEqual('09:00');
+      expect(timesOfDay[1].textContent).toEqual('09:30');
+      expect(timesOfDay[3].textContent).toEqual('10:30');
+    });
+    it('renders an empty cell at the start of the header row', () => {
+      render(<AppointmentForm />);
+      const headerRow = timeSlotTable().querySelector(
+        'thead > tr'
+      );
+      expect(headerRow.firstChild.textContent).toEqual('');
+    });
+    it('renders a week of available dates', () => {
+      const today = new Date(2018, 11, 1);
+      render(<AppointmentForm today={today} />);
+      const dates = timeSlotTable().querySelectorAll(
+        'thead >* th:not(:first-child)'
+      );
+      expect(dates).toHaveLength(7);
+      expect(dates[0].textContent).toEqual('Sat 01');
+      expect(dates[1].textContent).toEqual('Sun 02');
+      expect(dates[6].textContent).toEqual('Fri 07');
+    });    
+
   });
 });
