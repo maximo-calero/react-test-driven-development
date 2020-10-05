@@ -5,6 +5,7 @@ import {
   sampleAvailableTimeSlots,
   sampleStylists
 } from './sampleData';
+import 'whatwg-fetch';
 
 ReactDOM.render(
   <AppointmentForm
