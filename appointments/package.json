@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack",
     "test": "jest",
+    "test:verbose": "npx jest --verbose",
     "build-server": "webpack --config webpack-server.config.js",
     "test-server": "jest --config server/jest.json",
     "serve": "node dist/server/server.js"
