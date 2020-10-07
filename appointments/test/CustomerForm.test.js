@@ -1,7 +1,7 @@
 import React from 'react';
 import { createContainer, withEvent } from './domManipulators';
 import { CustomerForm } from '../src/CustomerForm';
-import { responseOk, responseError, requestBodyOf } from './spyHelpers';
+import { fetchResponseOk, fetchResponseError, requestBodyOf } from './spyHelpers';
 import 'whatwg-fetch';
 
 describe('CustomerForm', () => {
@@ -20,7 +20,7 @@ describe('CustomerForm', () => {
     } = createContainer());
     jest
       .spyOn(window, 'fetch')
-      .mockReturnValue(responseOk({}));
+      .mockReturnValue(fetchResponseOk({}));
   });
 
   afterEach(() => {
@@ -54,7 +54,7 @@ describe('CustomerForm', () => {
 
   it('notifies onSave when form is submitted', async () => {
     const customer = { id: 123 };
-    window.fetch.mockReturnValue(responseOk(customer));
+    window.fetch.mockReturnValue(fetchResponseOk(customer));
     const saveSpy = jest.fn();
   
     render(<CustomerForm onSave={saveSpy} />);
@@ -64,7 +64,7 @@ describe('CustomerForm', () => {
   });
 
   it('does not notify onSave if the POST request returns an error', async () => {
-    window.fetch.mockReturnValue(responseError());
+    window.fetch.mockReturnValue(fetchResponseError());
     const saveSpy = jest.fn();
   
     render(<CustomerForm onSave={saveSpy} />);

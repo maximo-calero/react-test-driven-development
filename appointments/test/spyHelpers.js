@@ -1,10 +1,10 @@
-export const responseOk = body =>
+export const fetchResponseOk = body =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve(body)
   });
 
-export const responseError = () =>
+export const fetchResponseError = () =>
   Promise.resolve({ ok: false });
 
 export const requestBodyOf = fetchSpy =>
