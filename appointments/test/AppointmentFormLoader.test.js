@@ -25,6 +25,7 @@ describe('AppointmentFormLoader', () => {
       .mockReturnValue(null);
   });
   afterEach(() => {
+    window.fetch.mockRestore();
     AppointmentFormExports.AppointmentForm.mockRestore();
   });
 
